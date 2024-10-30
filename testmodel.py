@@ -22,31 +22,44 @@ model = load_model(model_path)
 # Specify the path to the test folder containing the images
 test_folder_path = '/Users/alessandrahenriz/Desktop/capstone/sign_dataset/test/'  
 results = []
+true_labels = []  # List to store true labels
+predictions = []  # List to store predictions
 
 # Loop through all images in the test folder
-for root, _, files in os.walk(test_folder_path):
-    for f in files:
-        test_image_path = os.path.join(root, f)
+for root, dirs, files in os.walk(test_folder_path):
+    for label in dirs:  # For each subfolder (genuine or forged)
+        label_path = os.path.join(root, label)
+        for f in os.listdir(label_path):
+            test_image_path = os.path.join(label_path, f)
 
-        # Load and preprocess the test image
-        test_image = load_and_preprocess_image(test_image_path)
+            # Load and preprocess the test image
+            test_image = load_and_preprocess_image(test_image_path)
 
-        if test_image is not None:
-            # Expand dimensions to match the model's input shape (batch size, 224, 224, 1)
-            test_image = np.expand_dims(test_image, axis=0)
+            if test_image is not None:
+                # Expand dimensions to match the model's input shape (batch size, 224, 224, 1)
+                test_image = np.expand_dims(test_image, axis=0)
 
-            # Make predictions using the loaded model
-            prediction = model.predict(test_image)
+                # Make predictions using the loaded model
+                prediction = model.predict(test_image)
 
-            # Output the prediction
-            predicted_label = np.argmax(prediction, axis=1)
-            if predicted_label == 0:
-                results.append((test_image_path, "Genuine"))
+                # Output the prediction
+                predicted_label = np.argmax(prediction, axis=1)[0]
+                predictions.append(predicted_label)
+
+                # Add true label (0 for genuine, 1 for forged)
+                true_labels.append(0 if label == "genuine" else 1)
+
+                # Store result with prediction
+                results.append((test_image_path, "Genuine" if predicted_label == 0 else "Forged"))
             else:
-                results.append((test_image_path, "Forged"))
-        else:
-            print(f"Error loading the image: {test_image_path}")
+                print(f"Error loading the image: {test_image_path}")
+
+# Calculate accuracy
+accuracy = np.sum(np.array(predictions) == np.array(true_labels)) / len(true_labels) * 100
 
 # Print the results
 for image_path, label in results:
     print(f'Image: {image_path} - Prediction: {label}')
+
+# Print the accuracy
+print(f'Validation Accuracy: {accuracy:.2f}%')
