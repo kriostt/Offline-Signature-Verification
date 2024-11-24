@@ -16,11 +16,11 @@ def load_and_preprocess_image(path):
         return None
 
 # Load the saved model
-model_path = '/Users/alessandrahenriz/Desktop/capstone/signature_verification_model2.keras'
+model_path = "C:/Users/krisa/Desktop/CPRO 2902/Offline-Signature-Verification/signature_verification_model.keras"
 model = load_model(model_path)
 
 # Specify the path to the test folder containing the images
-test_folder_path = '/Users/alessandrahenriz/Desktop/capstone/sign_dataset/test/'  
+test_folder_path = "C:/Users/krisa/Desktop/CPRO 2902/signature_verification_dataset/sign_data/test"
 results = []
 true_labels = []  # List to store true labels
 predictions = []  # List to store predictions

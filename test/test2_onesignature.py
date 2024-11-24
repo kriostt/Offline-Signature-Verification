@@ -6,7 +6,7 @@ from tensorflow.keras.models import load_model  # type: ignore
 import os
 
 # Load the trained model (adjust the path)
-model = load_model("C:/Users/krisa/Desktop/CPRO 2902/Offline-Signature-Verification/verification_model.h5")
+model = load_model("C:/Users/krisa/Desktop/CPRO 2902/Offline-Signature-Verification/verification_model2.h5")
 
 # Define a threshold for similarity (adjust based on model performance)
 THRESHOLD = 0.5  # Genuine if similarity score > threshold

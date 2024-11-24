@@ -5,7 +5,7 @@ import numpy as np
 from tensorflow.keras.models import load_model # type: ignore
 
 # Load your trained model (adjust the path)
-model = load_model('/Users/alessandrahenriz/Desktop/test/verification_model.h5')
+model = load_model("C:/Users/krisa/Desktop/CPRO 2902/Offline-Signature-Verification/verification_model.h5")
 
 def preprocess_image(image_path):
     image = cv2.imread(image_path)
@@ -30,9 +30,6 @@ def compare_signatures():
         # Predict similarity using the model
         similarity_score = model.predict([signature1, signature2])
         
-        # Convert score to percentage
-        accuracy_percentage = (1 - similarity_score[0][0]) * 100  # Change to your desired logic
-        
         # Assuming a threshold for classification
         threshold = 0.5  # Adjust based on your model's output
         if similarity_score[0][0] > threshold:
@@ -41,7 +38,6 @@ def compare_signatures():
             result = "Forged"
         
         messagebox.showinfo("Result", f"Similarity Score: {similarity_score[0][0]:.2f}\n"
-                                        f"Accuracy: {accuracy_percentage:.2f}%\n"
                                         f"Result: {result}")
 
 # Create the main window with larger dimensions
