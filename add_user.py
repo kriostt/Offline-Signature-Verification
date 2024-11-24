@@ -5,7 +5,7 @@ from datetime import datetime
 import re
 
 # Database setup
-conn = sqlite3.connect("signature_verification.db")
+conn = sqlite3.connect("signature_verification2.db")
 cursor = conn.cursor()
 
 # Create tables
@@ -56,28 +56,39 @@ def add_user():
     except sqlite3.IntegrityError:
         messagebox.showerror("Error", "Email already exists!")
 
-def upload_signature():
+def upload_signatures():
     selected_user = user_combobox.get()
     if not selected_user:
         messagebox.showwarning("Input Error", "Please select a user!")
         return
     
-    file_path = filedialog.askopenfilename(filetypes=[("Image Files", "*.png *.jpg *.jpeg")])
-    if not file_path:
+    file_paths = filedialog.askopenfilenames(filetypes=[("Image Files", "*.png *.jpg *.jpeg")])
+    if not file_paths:
         return
     
-    try:
-        with open(file_path, "rb") as file:
-            image_data = file.read()
-        
-        user_id = user_combobox.get().split(" - ")[0]
-        upload_date = datetime.now()
-        cursor.execute("INSERT INTO Signatures (user_id, image_data, upload_date) VALUES (?, ?, ?)", 
-                       (user_id, image_data, upload_date))
-        conn.commit()
-        messagebox.showinfo("Success", "Signature uploaded successfully!")
-    except Exception as e:
-        messagebox.showerror("Error", f"An error occurred: {e}")
+    user_id = user_combobox.get().split(" - ")[0]
+    success_count = 0
+    failed_files = []
+
+    for file_path in file_paths:
+        try:
+            with open(file_path, "rb") as file:
+                image_data = file.read()
+            
+            upload_date = datetime.now()
+            cursor.execute("INSERT INTO Signatures (user_id, image_data, upload_date) VALUES (?, ?, ?)", 
+                        (user_id, image_data, upload_date))
+            conn.commit()
+            success_count += 1
+        except Exception as e:
+            failed_files.append(file_path)
+
+    # Provide feedback to user
+    if success_count > 0:
+        messagebox.showinfo("Success", f"Successfully uploaded {success_count} signature(s).")
+
+    if failed_files:
+        messagebox.showerror("Error", f"Failed to upload {len(failed_files)} signatures:\n" + "\n".join(failed_files))
 
 def refresh_users():
     cursor.execute("SELECT user_id, name FROM Users")
@@ -109,8 +120,8 @@ Label(app, text="Select User:").grid(row=5, column=0, sticky="e")
 user_combobox = Combobox(app, width=28, state="readonly")
 user_combobox.grid(row=5, column=1)
 
-upload_signature_button = Button(app, text="Upload Signature", command=upload_signature)
-upload_signature_button.grid(row=6, column=0, columnspan=2, pady=10)
+upload_signatures_button = Button(app, text="Upload Signatures", command=upload_signatures)
+upload_signatures_button.grid(row=6, column=0, columnspan=2, pady=10)
 
 # Populate users dropdown
 refresh_users()
