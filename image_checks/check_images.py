@@ -1,7 +1,7 @@
 import os
 from PIL import Image
 
-folder_path = "/path/to/pictures"
+folder_path = "C:/Users/krisa/Desktop/CPRO 2902/signature_verification_dataset"
 print("Checking folder contents...")
 
 # Walk through all folders and subfolders
