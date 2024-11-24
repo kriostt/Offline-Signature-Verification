@@ -17,10 +17,10 @@ def load_and_preprocess_image(path, label):
         return None, None
 
 # Path to the genuine signatures
-genuine_path = '/Users/alessandrahenriz/Desktop/capstone/sign_dataset/test/genuine/'
+genuine_path = "C:/Users/krisa/Desktop/CPRO 2902/signature_verification_dataset/sign_data/test/genuine"
 
 # Path to the forged signatures
-forged_path = '/Users/alessandrahenriz/Desktop/capstone/sign_dataset/test/forged/'
+forged_path = "C:/Users/krisa/Desktop/CPRO 2902/signature_verification_dataset/sign_data/test/forged"
 
 # Walk through the genuine signature folder
 genuine_images_and_labels = []
@@ -91,7 +91,7 @@ model.fit(datagen.flow(X_train, y_train, batch_size=32),
           validation_data=(X_val, y_val))
 
 # Save the model after training
-model.save('/Users/alessandrahenriz/Desktop/capstone/signature_verification_model.h5')
+model.save("C:/Users/krisa/Desktop/CPRO 2902/Offline-Signature-Verification/signature_verification_model.h5")
 
 # Evaluate the model
 validation_score = model.evaluate(X_val, y_val, verbose=0)[1]

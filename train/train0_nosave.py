@@ -2,10 +2,10 @@ import os
 import cv2
 import numpy as np
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense # type: ignore
-from tensorflow.keras.models import Sequential # type: ignore
-from tensorflow.keras.utils import to_categorical # type: ignore
-from tensorflow.keras.preprocessing.image import ImageDataGenerator # type: ignore
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 def load_and_preprocess_image(path, label):
     image = cv2.imread(path)
@@ -17,10 +17,10 @@ def load_and_preprocess_image(path, label):
         return None, None
 
 # Path to the genuine signatures
-genuine_path = '/Users/alessandrahenriz/Desktop/capstone/sign_dataset/train/genuine/'
+genuine_path = "C:/Users/krisa/Desktop/CPRO 2902/signature_verification_dataset/sign_data/test/genuine"
 
 # Path to the forged signatures
-forged_path = '/Users/alessandrahenriz/Desktop/capstone/sign_dataset/train/forged/'
+forged_path = "C:/Users/krisa/Desktop/CPRO 2902/signature_verification_dataset/sign_data/test/forged"
 
 # Walk through the genuine signature folder
 genuine_images_and_labels = []
@@ -60,39 +60,22 @@ X_val = X_val.reshape(-1, 224, 224, 1)
 
 # Build the model
 model = Sequential()
-model.add(Conv2D(64, kernel_size=(3, 3), activation='relu', input_shape=(224, 224, 1)))
+model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(224, 224, 1)))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Conv2D(128, kernel_size=(3, 3), activation='relu'))
+model.add(Conv2D(64, kernel_size=(3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Flatten())
-model.add(Dense(256, activation='relu'))
+model.add(Dense(128, activation='relu'))
 model.add(Dense(2, activation='softmax'))  # Binary classification
 
 # Compile the model
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-# Initialize the ImageDataGenerator
-datagen = ImageDataGenerator(
-    rotation_range=15,
-    width_shift_range=0.1,
-    height_shift_range=0.1,
-    shear_range=0.1,
-    zoom_range=0.1,
-    horizontal_flip=False,
-    fill_mode='nearest'
-)
-
-# Fit the generator on the training data
-datagen.fit(X_train)
-
-# Train the model using augmented data
-model.fit(datagen.flow(X_train, y_train, batch_size=32), 
-          epochs=30, 
-          validation_data=(X_val, y_val))
-
-# Save the model after training
-model.save('/Users/alessandrahenriz/Desktop/capstone/signature_verification_model2.keras')
+# Train the model
+model.fit(X_train, y_train, batch_size=32, epochs=50, validation_data=(X_val, y_val))
 
 # Evaluate the model
 validation_score = model.evaluate(X_val, y_val, verbose=0)[1]
 print('Validation Score:', validation_score)
+
+
