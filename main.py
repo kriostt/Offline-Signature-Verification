@@ -92,6 +92,8 @@ def handle_upload_signatures():
             return
 
     messagebox.showinfo("Success", "Signature(s) uploaded successfully!")
+    user_combobox.set('')
+    file_entry.delete(0, 'end')
 
 def handle_verify_signature():
     # Handle verifying a signature
@@ -118,6 +120,8 @@ def handle_verify_signature():
         max_score, is_verified = verify_signature(uploaded_signature, genuine_signatures)
         result = "Verified" if is_verified else "Forged"
         messagebox.showinfo("Verification Result", f"Signature {result}! Similarity: {max_score:.2f}")
+        verify_user_combobox.set('')
+        verify_file_entry.delete(0, 'end')
     except Exception as e:
         messagebox.showerror("Error", f"Could not verify signature: {e}")
 
