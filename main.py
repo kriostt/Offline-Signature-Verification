@@ -15,6 +15,7 @@ def refresh_users():
     # Refresh the user list in the combobox
     users = get_users()
     user_combobox['values'] = [f"{user[0]} - {user[1]}" for user in users]
+    verify_user_combobox['values'] = [f"{user[0]} - {user[1]}" for user in users]
 
 def handle_add_user():
     # Handle adding a new user
@@ -94,7 +95,7 @@ def handle_upload_signatures():
 
 def handle_verify_signature():
     # Handle verifying a signature
-    selected_user = user_combobox.get()
+    selected_user = verify_user_combobox.get()
     if not selected_user:
         messagebox.showwarning("Input Error", "Please select a user!")
         return
@@ -157,13 +158,16 @@ upload_signatures_button.grid(row=3, column=0, columnspan=3, pady=5)
 verify_signature_frame = Frame(app)
 verify_signature_frame.pack(pady=10)
 Label(verify_signature_frame, text="Verify Signature").grid(row=0, column=0, columnspan=3, pady=5)
-Label(verify_signature_frame, text="Signature File:").grid(row=1, column=0, sticky="e")
+Label(verify_signature_frame, text="Select User:").grid(row=1, column=0, sticky="e")
+verify_user_combobox = Combobox(verify_signature_frame, width=28, state="readonly")
+verify_user_combobox.grid(row=1, column=1)
+Label(verify_signature_frame, text="Signature File:").grid(row=2, column=0, sticky="e")
 verify_file_entry = Entry(verify_signature_frame, width=30)
-verify_file_entry.grid(row=1, column=1)
+verify_file_entry.grid(row=2, column=1)
 verify_browse_button = Button(verify_signature_frame, text="Browse", command=lambda: handle_browse_files(verify_file_entry, single_file=True))
-verify_browse_button.grid(row=1, column=2, padx=(10, 0))  # Added horizontal padding to separate button
+verify_browse_button.grid(row=2, column=2, padx=(10, 0))  # Added horizontal padding to separate button
 verify_button = Button(verify_signature_frame, text="Verify Signature", command=handle_verify_signature)
-verify_button.grid(row=2, column=0, columnspan=3, pady=5)
+verify_button.grid(row=3, column=0, columnspan=3, pady=5)
 
 # Populate user dropdown
 refresh_users()
