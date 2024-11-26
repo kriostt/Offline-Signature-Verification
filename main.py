@@ -1,6 +1,7 @@
 from tkinter import Tk, Label, Entry, Button, filedialog, messagebox, Frame
 from tkinter.ttk import Combobox
 import re
+import os
 from db_manager import add_user, get_users, add_signature, get_signatures
 from signature_utils import preprocess_image, verify_signature
 
@@ -61,17 +62,35 @@ def handle_upload_signatures():
 
     file_paths = file_entry.get().split(", ")  # Get file paths from the entry (comma-separated)
     if not file_paths or file_paths == ['']:
-        messagebox.showwarning("Input Error", "Please select signature files!")
+        messagebox.showwarning("Input Error", "Please select signature file(s)!")
         return
 
     user_id = selected_user.split(" - ")[0]
+
+    # Get existing signature BLOBs for the selected user
+    existing_signatures = [row[0] for row in get_signatures(user_id)]
+
     for file_path in file_paths:
         try:
+            # Read the image file as binary data (BLOB)
             with open(file_path, "rb") as file:
-                add_signature(user_id, file.read())
+                image_data = file.read()
+
+            # Check if the signature already exists by comparing BLOBs
+            if image_data in existing_signatures:
+                response = messagebox.askyesno(
+                    "Signature Exists",
+                    f"This signature already exists.\nDo you want to replace it?"
+                )
+                if not response:
+                    continue  # Skip this file if the user chooses not to replace
+            # Add the signature to the database
+            add_signature(user_id, image_data)
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to upload a signature: {e}")
-    messagebox.showinfo("Success", "Signatures uploaded successfully!")
+            messagebox.showerror("Error", f"Failed to upload signature: {e}")
+            return
+
+    messagebox.showinfo("Success", "Signature(s) uploaded successfully!")
 
 def handle_verify_signature():
     # Handle verifying a signature
