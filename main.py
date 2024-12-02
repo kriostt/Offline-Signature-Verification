@@ -83,10 +83,16 @@ def handle_upload_signatures():
                     "Signature Exists",
                     f"This signature already exists.\nDo you want to replace it?"
                 )
-                if not response:
+                if response:  # If the user selects 'Yes', replace the signature
+                    # Replace the existing signature 
+                    existing_signatures.remove(image_data)  # Remove the old one
+                    add_signature(user_id, image_data)  # Add the new one
+                else:
                     continue  # Skip this file if the user chooses not to replace
-            # Add the signature to the database
-            add_signature(user_id, image_data)
+                
+            else:
+                # Add the signature if it doesn't exist
+                add_signature(user_id, image_data)
         except Exception as e:
             messagebox.showerror("Error", f"Failed to upload signature: {e}")
             return
