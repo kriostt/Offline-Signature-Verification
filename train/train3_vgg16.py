@@ -22,20 +22,20 @@ model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy']
 # Data Preparation
 datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)
 train_generator = datagen.flow_from_directory(
-    "C:/Users/krisa/Desktop/CPRO 2902/signature_verification_dataset4/train",  # Replace with your dataset path
+    "C:/Users/krisa/Desktop/CPRO 2902/signature_verification_dataset2/train",  # Replace with your dataset path
     target_size=(224, 224),
     class_mode='binary',
     subset='training'
 )
 validation_generator = datagen.flow_from_directory(
-    "C:/Users/krisa/Desktop/CPRO 2902/signature_verification_dataset4/validation",  # Replace with your dataset path
+    "C:/Users/krisa/Desktop/CPRO 2902/signature_verification_dataset2/validation",  # Replace with your dataset path
     target_size=(224, 224),
     class_mode='binary',
     subset='validation'
 )
 
 # Train the Model
-model.fit(train_generator, validation_data=validation_generator, epochs=5)
+model.fit(train_generator, validation_data=validation_generator, epochs=15)
 
 # Save the Model
-model.save('verification_model7.h5')
+model.save('verification_model.h5')
