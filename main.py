@@ -4,6 +4,7 @@ import re
 import os
 from db_manager import add_user, get_users, add_signature, get_signatures
 from signature_utils import preprocess_image, verify_signature
+from tkinter import font
 
 # Helper Functions
 def is_valid_email(email):
@@ -134,50 +135,76 @@ def handle_verify_signature():
 # Tkinter UI
 app = Tk()
 app.title("Offline Signature Verification System")
-app.geometry("600x400")
+app.geometry("600x630")
+
+# Set background color for the main app window
+app.configure(bg="#D2B48C")  # Light gray background
+
+# Create a frame to hold the entire UI with a border around it
+outer_frame = Frame(app, bg="#D2B48C", bd=3, relief="solid")  # Border around the entire UI
+outer_frame.pack(padx=30, pady=30, fill="both", expand=True)
+
+
+# Define font styles for labels and buttons
+label_font = font.Font(family="Times New Roman", size=12, weight="bold")
+button_font = font.Font(family="Times New Roman", size=10)
+
+# Add a Label at the top with italicized text inside the outer frame
+title_font = font.Font(family="Times New Roman", size=16, weight="bold", slant="italic")
+title_label = Label(
+    outer_frame, 
+    text="Offline Signature Verification System", 
+    font=title_font, 
+    bg="#D2B48C",  # Light brown background
+    fg="#4E3629",  # Dark brown text
+    width=30,  # Set a width for the label
+    anchor="center"  # Center the text inside the label
+)
+
+title_label.pack(pady=5, anchor="n", padx=5, fill="x") 
 
 # Add User Section
-add_user_frame = Frame(app)
+add_user_frame = Frame(outer_frame, bg="#D2B48C")
 add_user_frame.pack(pady=10)
-Label(add_user_frame, text="Add User").grid(row=0, column=0, columnspan=3, pady=5)
-Label(add_user_frame, text="Name:").grid(row=1, column=0, sticky="e")
-name_entry = Entry(add_user_frame, width=30)
-name_entry.grid(row=1, column=1)
-Label(add_user_frame, text="Email:").grid(row=2, column=0, sticky="e")
-email_entry = Entry(add_user_frame, width=30)
-email_entry.grid(row=2, column=1)
-add_user_button = Button(add_user_frame, text="Add User", command=handle_add_user)
-add_user_button.grid(row=3, column=0, columnspan=3, pady=5)
+Label(add_user_frame, text="Add User", font=label_font, bg="#D2B48C", fg="#4E3629").grid(row=0, column=0, columnspan=3, pady=5)
+Label(add_user_frame, text="Name:", font=label_font, bg="#D2B48C", fg="#4E3629").grid(row=1, column=0, sticky="e", pady=5)
+name_entry = Entry(add_user_frame, width=30, font=("Times New Roman", 12), relief="solid")
+name_entry.grid(row=1, column=1, pady=5)
+Label(add_user_frame, text="Email:", font=label_font, bg="#D2B48C", fg="#4E3629").grid(row=2, column=0, sticky="e", pady=5)
+email_entry = Entry(add_user_frame, width=30, font=("Times New Roman", 12), relief="solid")
+email_entry.grid(row=2, column=1,  pady=5)
+add_user_button = Button(add_user_frame, text="Add User", command=handle_add_user, font=button_font, bg="#8B4513", fg="white", relief="raised", bd=2)
+add_user_button.grid(row=3, column=0, columnspan=3, pady=10)
 
 # Upload Signature Section
-upload_signature_frame = Frame(app)
+upload_signature_frame = Frame(outer_frame, bg="#D2B48C")
 upload_signature_frame.pack(pady=10)
-Label(upload_signature_frame, text="Upload Signatures").grid(row=0, column=0, columnspan=3, pady=5)
-Label(upload_signature_frame, text="Select User:").grid(row=1, column=0, sticky="e")
-user_combobox = Combobox(upload_signature_frame, width=28, state="readonly")
-user_combobox.grid(row=1, column=1)
-Label(upload_signature_frame, text="Signature Files:").grid(row=2, column=0, sticky="e")
-file_entry = Entry(upload_signature_frame, width=30)
-file_entry.grid(row=2, column=1)
-browse_button = Button(upload_signature_frame, text="Browse", command=lambda: handle_browse_files(file_entry, single_file=False))
+Label(upload_signature_frame, text="Upload Signatures", font=label_font, bg="#D2B48C", fg="#4E3629").grid(row=0, column=0, columnspan=3, pady=5)
+Label(upload_signature_frame, text="Select User:", font=label_font, bg="#D2B48C", fg="#4E3629").grid(row=1, column=0, sticky="e", pady=5)
+user_combobox = Combobox(upload_signature_frame, width=28, state="readonly",  font=("Times New Roman", 12))
+user_combobox.grid(row=1, column=1, pady=5)
+Label(upload_signature_frame, text="Signature Files:", font=label_font, bg="#D2B48C", fg="#4E3629").grid(row=2, column=0, sticky="e", pady=5)
+file_entry = Entry(upload_signature_frame, width=30, font=("Times New Roman", 12), relief="solid")
+file_entry.grid(row=2, column=1, pady=5)
+browse_button = Button(upload_signature_frame, text="Browse", command=lambda: handle_browse_files(file_entry, single_file=False), font=button_font, bg="#8B4513", fg="white", relief="raised", bd=2)
 browse_button.grid(row=2, column=2, padx=(10, 0))  # Added horizontal padding to separate button
-upload_signatures_button = Button(upload_signature_frame, text="Upload Signatures", command=handle_upload_signatures)
-upload_signatures_button.grid(row=3, column=0, columnspan=3, pady=5)
+upload_signatures_button = Button(upload_signature_frame, text="Upload Signatures", command=handle_upload_signatures, font=button_font, bg="#8B4513", fg="white", relief="raised", bd=2)
+upload_signatures_button.grid(row=3, column=0, columnspan=3, pady=10)
 
 # Verify Signature Section
-verify_signature_frame = Frame(app)
+verify_signature_frame = Frame(outer_frame, bg="#D2B48C")
 verify_signature_frame.pack(pady=10)
-Label(verify_signature_frame, text="Verify Signature").grid(row=0, column=0, columnspan=3, pady=5)
-Label(verify_signature_frame, text="Select User:").grid(row=1, column=0, sticky="e")
-verify_user_combobox = Combobox(verify_signature_frame, width=28, state="readonly")
-verify_user_combobox.grid(row=1, column=1)
-Label(verify_signature_frame, text="Signature File:").grid(row=2, column=0, sticky="e")
-verify_file_entry = Entry(verify_signature_frame, width=30)
-verify_file_entry.grid(row=2, column=1)
-verify_browse_button = Button(verify_signature_frame, text="Browse", command=lambda: handle_browse_files(verify_file_entry, single_file=True))
+Label(verify_signature_frame, text="Verify Signature", font=label_font, bg="#D2B48C", fg="#4E3629").grid(row=0, column=0, columnspan=3, pady=5)
+Label(verify_signature_frame, text="Select User:", font=label_font, bg="#D2B48C", fg="#4E3629").grid(row=1, column=0, sticky="e", pady=5)
+verify_user_combobox = Combobox(verify_signature_frame, width=28, state="readonly",  font=("Times New Roman", 12))
+verify_user_combobox.grid(row=1, column=1, pady=5)
+Label(verify_signature_frame, text="Signature File:", font=label_font, bg="#D2B48C", fg="#4E3629").grid(row=2, column=0, sticky="e", pady=5)
+verify_file_entry = Entry(verify_signature_frame, width=30, font=("Times New Roman", 12), relief="solid")
+verify_file_entry.grid(row=2, column=1, pady=5)
+verify_browse_button = Button(verify_signature_frame, text="Browse", command=lambda: handle_browse_files(verify_file_entry, single_file=True), font=button_font, bg="#8B4513", fg="white", relief="raised", bd=2)
 verify_browse_button.grid(row=2, column=2, padx=(10, 0))  # Added horizontal padding to separate button
-verify_button = Button(verify_signature_frame, text="Verify Signature", command=handle_verify_signature)
-verify_button.grid(row=3, column=0, columnspan=3, pady=5)
+verify_button = Button(verify_signature_frame, text="Verify Signature", command=handle_verify_signature, font=button_font, bg="#8B4513", fg="white", relief="raised", bd=2)
+verify_button.grid(row=3, column=0, columnspan=3, pady=15)
 
 # Populate user dropdown
 refresh_users()
