@@ -1,7 +1,6 @@
 from tkinter import Tk, Label, Entry, Button, filedialog, messagebox, Frame
 from tkinter.ttk import Combobox
 import re
-import os
 from db_manager import add_user, get_users, add_signature, get_signatures
 from signature_utils import preprocess_image, verify_signature
 from tkinter import font
