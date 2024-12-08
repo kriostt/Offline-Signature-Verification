@@ -3,8 +3,9 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Dense, Flatten, Lambda
 import tensorflow as tf
 import matplotlib.pyplot as plt
-from new_model.data_preparation import prepare_data
-from new_model.signature_utils2 import load_pairs
+from data_preparation import prepare_data
+from signature_utils2 import load_pairs
+from tensorflow.keras.callbacks import EarlyStopping
 
 # Directories for training data
 train_genuine_dir = 'C:/Users/krisa/Desktop/CPRO 2902/signature_verification_dataset2/train/genuine'
@@ -49,6 +50,13 @@ def build_similarity_model():
 # Build and compile the model
 model = build_similarity_model()
 model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
+
+# Initialize EarlyStopping callback
+early_stopping = EarlyStopping(
+    monitor='val_accuracy',  # Monitor validation accuracy
+    patience=0,  # Stop immediately after no improvement
+    restore_best_weights=True  # Restore model with best weights
+)
 
 # Train the model
 history = model.fit(
