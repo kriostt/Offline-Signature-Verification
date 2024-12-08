@@ -19,8 +19,8 @@ X1_train, X2_train, y_train = load_pairs(train_pairs, train_labels)
 def create_base_model():
     base_model = VGG16(weights="imagenet", include_top=False, input_shape=(224, 224, 3))
     x = Flatten()(base_model.output)
-    x = Dense(512, activation="relu")(x)
     x = Dense(256, activation="relu")(x)
+    x = Dense(128, activation="relu")(x)
     return Model(base_model.input, x)
 
 
@@ -39,8 +39,8 @@ def build_similarity_model():
     diff = Lambda(lambda tensors: tf.abs(tensors[0] - tensors[1]))([features_1, features_2])
 
     # Fully connected layers
-    x = Dense(128, activation="relu")(diff)
-    x = Dense(64, activation="relu")(x)
+    x = Dense(64, activation="relu")(diff)
+    x = Dense(32, activation="relu")(x)
     output = Dense(1, activation="sigmoid")(x)
 
     model = Model(inputs=[input_1, input_2], outputs=output)
@@ -54,7 +54,7 @@ model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"]
 # Initialize EarlyStopping callback
 early_stopping = EarlyStopping(
     monitor='val_accuracy',  # Monitor validation accuracy
-    patience=0,  # Stop immediately after no improvement
+    patience=2,  # Stop after 2 epochs of no improvement 
     restore_best_weights=True  # Restore model with best weights
 )
 
