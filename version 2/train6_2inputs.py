@@ -58,18 +58,22 @@ early_stopping = EarlyStopping(
     restore_best_weights=True  # Restore model with best weights
 )
 
-# Train the model
-history = model.fit(
-    [X1_train, X2_train],
-    y_train,
-    validation_split=0.2,
-    batch_size=64,
-    epochs=10,
-)
-
-# Save the trained model
-model.save("signature_similarity_model.h5")
-print("Model saved as 'signature_similarity_model.h5'")
+try:
+    # Train the model
+    history = model.fit(
+        [X1_train, X2_train],
+        y_train,
+        validation_split=0.2,
+        batch_size=64,
+        epochs=10,
+        callbacks=[early_stopping]
+    )
+except KeyboardInterrupt:
+    print("Training interrupted manually.")
+finally:
+    # Save the model after training is stopped
+    model.save("signature_similarity_model.h5")
+    print("Model saved as 'signature_similarity_model.h5'")
 
 # Plot training and validation metrics
 plt.figure(figsize=(12, 6))
