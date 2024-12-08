@@ -63,7 +63,7 @@ try:
     history = model.fit(
         [X1_train, X2_train],
         y_train,
-        validation_split=0.2,
+        validation_split=0.3,
         batch_size=32,
         epochs=10,
         callbacks=[early_stopping]
