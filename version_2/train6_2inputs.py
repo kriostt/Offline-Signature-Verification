@@ -64,7 +64,7 @@ try:
         [X1_train, X2_train],
         y_train,
         validation_split=0.2,
-        batch_size=64,
+        batch_size=32,
         epochs=10,
         callbacks=[early_stopping]
     )
