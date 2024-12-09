@@ -73,7 +73,7 @@ except KeyboardInterrupt:
     print("Training interrupted manually.")
 finally:
     # Save the model after training is stopped
-    model.save("signature_similarity_model.h5")
+    model.save("signature_similarity_model", save_format="tf")
     print("Model saved as 'signature_similarity_model.h5'")
 
 # Plot training and validation metrics
