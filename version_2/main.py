@@ -4,6 +4,10 @@ import re
 from db_manager import add_user, get_users, add_signature, get_signatures
 from signature_utils import preprocess_image, verify_signature
 from tkinter import font
+from tensorflow.keras.models import load_model
+
+# Load the trained model
+model = load_model("C:/Users/krisa/Desktop/CPRO 2902/Offline-Signature-Verification/version_2/signature_similarity_model.h5")
 
 # Helper Functions
 def is_valid_email(email):
@@ -123,7 +127,7 @@ def handle_verify_signature():
             return
 
         # Verify signature against stored genuine signatures
-        max_score, is_verified = verify_signature(uploaded_signature, genuine_signatures)
+        max_score, is_verified = verify_signature(uploaded_signature, genuine_signatures, model)
         result = "Verified" if is_verified else "Forged"
         messagebox.showinfo("Verification Result", f"Signature {result}! Similarity: {max_score:.2f}")
         verify_user_combobox.set('')

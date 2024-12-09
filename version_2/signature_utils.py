@@ -1,10 +1,6 @@
 import numpy as np
 import cv2
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
-from tensorflow.keras.models import load_model
-
-# Load the trained model
-model = load_model("C:/Users/krisa/Desktop/CPRO 2902/Offline-Signature-Verification/version_2/signature_similarity_model.h5")
 
 # Preprocess an image for VGG16 input
 def preprocess_image(image_path):
@@ -13,7 +9,7 @@ def preprocess_image(image_path):
     image = image / 255.0  # Normalize
     return image
 
-def verify_signature(uploaded_signature, genuine_signatures, threshold=0.5):
+def verify_signature(uploaded_signature, genuine_signatures, model, threshold=0.5):
     # Verify a signature against stored signatures
     similarity_scores = []
     for genuine_image_data in genuine_signatures:
