@@ -55,7 +55,7 @@ model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"]
 # Initialize EarlyStopping callback
 early_stopping = EarlyStopping(
     monitor='val_accuracy',  # Monitor validation accuracy
-    patience=2,  # Stop after 2 epochs of no improvement 
+    patience=0,  # Stop immediately after no improvement 
     restore_best_weights=True  # Restore model with best weights
 )
 
@@ -73,7 +73,7 @@ except KeyboardInterrupt:
     print("Training interrupted manually.")
 finally:
     # Save the model after training is stopped
-    model.save("signature_similarity_model", save_format="tf")
+    model.save("signature_similarity_model.h5")
     print("Model saved as 'signature_similarity_model.h5'")
 
 # Plot training and validation metrics
