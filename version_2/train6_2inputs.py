@@ -4,7 +4,7 @@ from tensorflow.keras.layers import Input, Dense, Flatten, Lambda
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from data_preparation import prepare_data
-from signature_utils2 import load_pairs
+from signature_utils import load_pairs
 from tensorflow.keras.callbacks import EarlyStopping
 
 # Directories for training data
@@ -23,7 +23,6 @@ def create_base_model():
     x = Dense(128, activation="relu")(x)
     return Model(base_model.input, x)
 
-
 # Create the similarity model
 def build_similarity_model():
     base_model = create_base_model()
@@ -36,7 +35,10 @@ def build_similarity_model():
     features_2 = base_model(input_2)
 
     # Compute absolute difference
-    diff = Lambda(lambda tensors: tf.abs(tensors[0] - tensors[1]))([features_1, features_2])
+    diff = Lambda(
+        lambda tensors: tf.abs(tensors[0] - tensors[1]),
+        output_shape=(128,)  # Explicitly specify the output shape
+    )([features_1, features_2])
 
     # Fully connected layers
     x = Dense(64, activation="relu")(diff)
@@ -45,7 +47,6 @@ def build_similarity_model():
 
     model = Model(inputs=[input_1, input_2], outputs=output)
     return model
-
 
 # Build and compile the model
 model = build_similarity_model()
